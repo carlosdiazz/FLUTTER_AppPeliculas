@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_peliculas/models/movie.dart';
 import 'package:flutter_peliculas/routes/routes.dart';
 
 class MovieSlider extends StatelessWidget {
-  const MovieSlider({super.key});
+  const MovieSlider({super.key, required this.movies, this.titulo});
+  final List<Movie> movies;
+  final String? titulo;
 
   @override
   Widget build(BuildContext context) {
@@ -10,13 +13,14 @@ class MovieSlider extends StatelessWidget {
       width: double.infinity,
       height: 280,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Text(
-            'Poulares',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+        if (titulo != null)
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Text(
+              titulo ?? '',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+            ),
           ),
-        ),
         SizedBox(
           height: 10,
         ),
@@ -24,7 +28,9 @@ class MovieSlider extends StatelessWidget {
           child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: 20,
-              itemBuilder: (_, int index) => _MoviePoster()),
+              itemBuilder: (_, int index) => _MoviePoster(
+                    movie: movies[index],
+                  )),
         ),
       ]),
     );
@@ -32,8 +38,8 @@ class MovieSlider extends StatelessWidget {
 }
 
 class _MoviePoster extends StatelessWidget {
-  const _MoviePoster({super.key});
-
+  const _MoviePoster({super.key, required this.movie});
+  final Movie movie;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -49,7 +55,7 @@ class _MoviePoster extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
             child: FadeInImage(
               placeholder: AssetImage('assets/no-image.jpg'),
-              image: NetworkImage('https://via.placeholder.com/300x400'),
+              image: NetworkImage(movie.getPosterImg),
               width: 130,
               height: 190,
               fit: BoxFit.cover,
@@ -60,7 +66,7 @@ class _MoviePoster extends StatelessWidget {
           height: 10,
         ),
         Text(
-          'HOLACDDDd dsjksd sdkjgs sdgsdkj slhsdljds hdslgdso',
+          movie.title,
           overflow: TextOverflow.ellipsis,
           maxLines: 2,
         )
